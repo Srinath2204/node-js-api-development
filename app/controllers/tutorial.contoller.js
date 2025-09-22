@@ -109,7 +109,7 @@ exports.delete = (req, res) => {
 
 exports.deleteAll = (req, res) => {
 
-    Tutorial.deleteAll()
+    Tutorial.deleteMany()
     .then(data => {
         if(!data){
             res.status(404).send({
