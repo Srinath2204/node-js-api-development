@@ -3,38 +3,30 @@ const { checkDuplicateTitles } = require("../utils/validation");
 const Tutorial = db.tutorials;
 
 
-exports.create = (req, res) => {
-    if (!req.body.title) {
-        res.status(400).send({ message: "Content cannot be empty" });
-        return;
-    }
+exports.create = async (req, res) => {
+    try {
+        if (!req.body.title) {
+            res.status(400).send({ message: "Content cannot be empty" });
+            return;
+        }
+        const isDuplicateTitle = await checkDuplicateTitles(req.body.title);
 
-    const isDuplicateTitle = checkDuplicateTitles(req.body.title);
-    isDuplicateTitle.then(data => {
-        if (!data.length) {
+        if (!isDuplicateTitle?.length) {
             const tutorial = new Tutorial({
                 title: req.body.title,
                 description: req.body.description,
                 published: req.body.published ? req.body.published : false
             });
 
-            tutorial.save(tutorial)
-                .then(data => {
-                    res.send(data);
-                })
-                .catch(err => {
-                    res.status(500).send({
-                        message: err.message || "Error occurred while creating a tutorial"
-                    })
-                })
+            const data = await tutorial.save(tutorial)
+            res.send(data);
         }
         else {
             res.send({ message: "Title already exists" })
         }
-    })
-    .catch(err => {
-        console.log("Error ", err);
-    })
+    } catch (error) {
+        console.log("Error ", error);
+    }
 
 }
 
@@ -43,6 +35,8 @@ exports.findAll = (req, res) => {
     const condition = title ? { title: { $regex: new RegExp(title), $options: "i" } } : {};
 
     Tutorial.find(condition)
+
+
         .then(data => {
             res.send(data);
         })
