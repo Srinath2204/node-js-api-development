@@ -1,17 +1,19 @@
 const db = require("../models");
-const { checkDuplicateTitles } = require("../utils/validation");
+// const { checkDuplicateTitles } = require("../utils/validation");
 const Tutorial = db.tutorials;
+const { validationResult } = require("express-validator");
 
 
 exports.create = async (req, res) => {
     try {
-        if (!req.body.title) {
-            res.status(400).send({ message: "Content cannot be empty" });
-            return;
-        }
-        const isDuplicateTitle = await checkDuplicateTitles(req.body.title);
+        const result = validationResult(req);
+        // if (!req.body.title.trim()) {
+        //     res.status(400).send({ message: "Content cannot be empty" });
+        //     return;
+        // }
+        // const isDuplicateTitle = await checkDuplicateTitles(req.body.title);
 
-        if (!isDuplicateTitle?.length) {
+        if (result.isEmpty()) {
             const tutorial = new Tutorial({
                 title: req.body.title,
                 description: req.body.description,
@@ -22,7 +24,7 @@ exports.create = async (req, res) => {
             res.send(data);
         }
         else {
-            res.send({ message: "Title already exists" })
+            res.send({ message: result.errors[0].msg })
         }
     } catch (error) {
         console.log("Error ", error);

@@ -1,9 +1,11 @@
+const { createRecordValidator } = require("../utils/validation.js");
+
 module.exports = app => {
     const tutorials = require("../controllers/tutorial.contoller.js");
 
     const router = require("express").Router();
 
-    router.post("/", tutorials.create);
+    router.post("/", createRecordValidator, tutorials.create);
 
     router.get("/", tutorials.findAll);
 
