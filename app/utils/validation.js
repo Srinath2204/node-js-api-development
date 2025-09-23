@@ -1,7 +1,5 @@
 const { tutorials } = require("../models");
-
 const { body } = require('express-validator');
-
 
 const checkDuplicateTitles = async (title) => {
     const existingTutorial = await tutorials.findOne({ 'title': title });
