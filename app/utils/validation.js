@@ -10,7 +10,7 @@ const checkDuplicateTitles = async (title) => {
 }
 exports.createRecordValidator = [
     body('title').trim().notEmpty().withMessage("Title cannot be empty").bail().custom(checkDuplicateTitles),
-    body('description').trim().notEmpty().withMessage("Decription cannot be empty"),
+    body('description').trim().notEmpty().withMessage("Description cannot be empty").bail(),
     body('published').trim().notEmpty().withMessage("Published cannot be empty")
 ]
 

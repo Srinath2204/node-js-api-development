@@ -18,11 +18,11 @@ exports.create = async (req, res) => {
             res.send(data);
         }
         else {
+            res.send({message : result.errors[0].msg})
         }
     } catch (error) {
         console.log("Error ", error);
     }
-
 }
 
 exports.findAll = (req, res) => {
