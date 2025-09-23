@@ -2,7 +2,7 @@ const { tutorials } = require("../models");
 const { body } = require('express-validator');
 
 const checkDuplicateTitles = async (title) => {
-    const existingTutorial = await tutorials.findOne({ 'title': title });
+    const existingTutorial = await tutorials.findOne({ 'title': { $regex: new RegExp(`^${title}$`, 'i') } });
     if (existingTutorial) {
         throw new Error('Title already exists.');
     }
